@@ -3,6 +3,8 @@
 {% block content %}
     {% if error %}
         <h4 style="color: red;">{{ error }}</h4>
+    {% elif not submission.ended %}
+        <h4 style="color: lightskyblue">Results will appear after the time is up</h4>
     {% else %}
         {% for s in submission.items.all %}
             <ol>

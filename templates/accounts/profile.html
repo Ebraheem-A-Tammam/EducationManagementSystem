@@ -15,12 +15,14 @@
             <table>
                 <tr>
                     <th>Quiz</th>
+                    <th>&emsp; | &emsp; Status</th>
                     <th>&emsp; | &emsp; Score</th>
                     <th>&emsp; | &emsp; When</th>
                     <th>&emsp; | &emsp; Submission</th>
                 </tr>
                 <tr>
                     <td>_____</td>
+                    <td>&emsp; | &emsp;_____</td>
                     <td>&emsp; | &emsp;_____</td>
                     <td>&emsp; | &emsp;_____</td>
                     <td>&emsp; | &emsp;_____</td>
@@ -35,7 +37,24 @@
                         </td>
                         <td>
                             <span>
-                                &emsp; | &emsp; {{s.get_total_score}} 
+                                &emsp; | &emsp;
+                                {% if s.passed and s.ended %}
+                                    <span style="color:green;">passed</span>
+                                {% elif s.ended %}
+                                    <span style="color:red;">failed</span>
+                                {% else %}
+                                    not ended yet
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            <span>
+                                &emsp; | &emsp;
+                                {% if s.ended %}
+                                    {{ s.get_total_score }} 
+                                {% else %}
+                                    not ended yet
+                                {% endif %}
                             </span>
                         </td>
                         <td>
