@@ -6,7 +6,7 @@
             {{form.as_p }}
         <br><br>
         {%if category %}
-        <a class="btn btn-success ml-2" href="{% url 'quizzes:delete_category' category.id %}">Delete</a>
+        <a class="btn btn-success ml-2" href="{% url 'quizzes:delete_category' category.slug %}">Delete</a>
         {%endif%}
         <button class="btn btn-success ml-2" type="submit">save</button>
     </form>

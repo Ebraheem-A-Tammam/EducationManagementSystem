@@ -49,8 +49,8 @@ def admin_create_quiz(request):
 
 @login_required
 @admin_only
-def admin_update_quiz(request,quiz_id=None):
-    quiz_obj=get_object_or_404(Quiz,id=quiz_id)
+def admin_update_quiz(request, slug):
+    quiz_obj=get_object_or_404(Quiz,slug=slug)
     quiz_form=QuizForm(request.POST or None,instance=quiz_obj)
     formset=QuestionFromset(request.POST or None,instance=quiz_obj)
     Tformset=TagFromset(request.POST or None,instance=quiz_obj) # T ->tag
@@ -88,8 +88,8 @@ def admin_update_quiz(request,quiz_id=None):
 
 @login_required
 @admin_only
-def admin_quiz_detail_view(request,quiz_id=None):
-    quiz=get_object_or_404(Quiz,id=quiz_id)
+def admin_quiz_detail_view(request, slug):
+    quiz=get_object_or_404(Quiz, slug=slug)
     context={
         "quiz":quiz,
     }
@@ -120,7 +120,7 @@ def admin_create_questions(request):
 
 @login_required
 @admin_only
-def admin_update_questions(request,question_id=None):
+def admin_update_questions(request,question_id):
     question_obj=get_object_or_404(Question,id=question_id)
     question_form=QuestionForm(request.POST or None,instance=question_obj)
     formset=AnswerFormset(request.POST or None,instance=question_obj)
@@ -154,7 +154,7 @@ def admin_questions_list_view(request):
 
 @login_required
 @admin_only
-def admin_َquestion_detail_view(request,question_id=None):
+def admin_َquestion_detail_view(request,question_id):
     question=get_object_or_404(Question,id=question_id)
     context={
         "question":question,
@@ -177,7 +177,7 @@ def admin_create_answer(request):
 
 @login_required
 @admin_only
-def admin_update_answer(request,answer_id=None):
+def admin_update_answer(request,answer_id):
     answer_obj=get_object_or_404(Answer,id=answer_id)
     form=AnswerForm(request.POST or None,instance=answer_obj)
     context={
@@ -214,8 +214,8 @@ def admin_create_category(request):
 
 @login_required
 @admin_only
-def admin_update_category(request,category_id=None):
-    category_obj=get_object_or_404(Category,id=category_id)
+def admin_update_category(request, slug):
+    category_obj=get_object_or_404(Category, slug=slug)
     form=CategoryForm(request.POST or None,instance=category_obj)
     context={
         'category':category_obj,
@@ -237,14 +237,14 @@ def admin_category_list_view(request):
 
 @login_required
 @admin_only
-def admin_delete_quiz(request,quiz_id=None):
+def admin_delete_quiz(request, slug):
     context={
-        'quiz_id':quiz_id,
+        'slug':slug,
         'ty':'quiz',
         'n':1,
     }
     if request.POST:
-        quiz=get_object_or_404(Quiz,id=quiz_id)
+        quiz=get_object_or_404(Quiz, slug=slug)
         quiz.delete()
         return redirect('quizzes:quiz_list')
     return render(request,"staff/delete.html",context)
@@ -252,7 +252,7 @@ def admin_delete_quiz(request,quiz_id=None):
 
 @login_required
 @admin_only
-def admin_delete_question(request,question_id=None):
+def admin_delete_question(request,question_id):
     context={
         'question_id':question_id,
         'ty':"question",
@@ -267,7 +267,7 @@ def admin_delete_question(request,question_id=None):
 
 @login_required
 @admin_only
-def admin_delete_answer(request,answer_id=None):
+def admin_delete_answer(request,answer_id):
     context={
         'answer_id':answer_id,
         'ty':"answer",
@@ -282,14 +282,14 @@ def admin_delete_answer(request,answer_id=None):
 
 @login_required
 @admin_only
-def admin_delete_category(request,category_id=None):
+def admin_delete_category(request, slug):
     context={
-        'category_id':category_id,
+        'slug':slug,
         'ty':"category",
 
     }
     if request.POST:
-        categroy=get_object_or_404(Category,id=category_id)
+        categroy=get_object_or_404(Category, slug=slug)
         categroy.delete()
         return redirect('quizzes:category_list')
     return render(request,"staff/delete.html",context)
@@ -307,8 +307,8 @@ def category_list_view(request):
     return render(request, 'quizzes/quiz_list.html', context)
 
 @login_required
-def categorized_quiz_list_view(request, category_id):
-    category = Category.objects.get(category=category_id)
+def categorized_quiz_list_view(request, slug):
+    category = Category.objects.get(slug=slug)
     quiz = category.quizzes.all()
     context = {
         "quizzes": quiz,
@@ -316,9 +316,9 @@ def categorized_quiz_list_view(request, category_id):
     return render(request, 'quizzes/quiz_list.html', context)
 
 @login_required
-def quiz_detail_view(request, category_id, quiz_id):
+def quiz_detail_view(request, slug, qslug):
     if request.POST:
-        quiz = Quiz.objects.get(pk=quiz_id) 
+        quiz = Quiz.objects.get(slug=qslug) 
         submission = request.user.get_last_submission(quiz)
         submission.finished = True
         submission.save()
@@ -327,8 +327,8 @@ def quiz_detail_view(request, category_id, quiz_id):
         for q in quiz.questions.all():
             ans = request.POST.get(q.question)
             AnswerItem.objects.create(submission=submission, question=q, answer=Answer.objects.get(answer=ans))
-        return redirect(reverse('quizzes:quiz_result', args=(category_id, quiz_id, request.user.get_last_submission(quiz=quiz).id)))
-    quiz = Quiz.objects.get(pk=quiz_id)
+        return redirect(reverse('quizzes:quiz_result', args=(slug, qslug, request.user.get_last_submission(quiz=quiz).id)))
+    quiz = Quiz.objects.get(slug=qslug)
     
     if quiz.daily_subm_limit_exceeded(request.user):
         return render(request, 'quizzes/quiz_detail.html', {'error': 'daily submissions limit exceded'})
@@ -350,7 +350,7 @@ def quiz_detail_view(request, category_id, quiz_id):
     return render(request, 'quizzes/quiz_detail.html', context)
 
 @login_required
-def quiz_result_view(request, category_id, quiz_id, submission_id):
+def quiz_result_view(request, slug, qslug, submission_id):
     """
     points = 0
     quiz = Quiz.objects.get(pk=id) 

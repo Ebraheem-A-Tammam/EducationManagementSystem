@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-    {% if categoies %}
+    {% if categories %}
         <h4>Categories: </h4>
         <ul>
         {% for c in categories %}
-            <li><a href="{% url 'quizzes:categorized_quiz_list' c.category %}">{{ c.category }}</a></li>
+            <li><a href="{% url 'quizzes:categorized_quiz_list' c.slug %}">{{ c.category }}</a></li>
         {% endfor %}
         </ul>
         <br>
@@ -17,10 +17,10 @@
             <div class="card">
                 <div class="card-header">
                     <span class="font-weight-bold">
-                        <a href="{% url 'quizzes:quiz_detail' q.id %}">{{ q.title }}</a>
+                        <a href="{% url 'quizzes:quiz_detail' q.slug %}">{{ q.title }}</a>
                     </span> &middot;
                     <span class="text-muted">
-                       &emsp; <a href="{% url 'quizzes:edit_quiz' q.id %}">update</a> &emsp; | &emsp; category: {{ q.category }} &emsp; | &emsp; difficulty: {{ q.difficulty }} &emsp; | &emsp; duration {{ q.duration }}
+                       &emsp; <a href="{% url 'quizzes:edit_quiz' q.slug %}">update</a> &emsp; | &emsp; category: {{ q.category }} &emsp; | &emsp; difficulty: {{ q.difficulty }} &emsp; | &emsp; duration {{ q.duration }}
                     </span>
                 </div>
                 <div class="card-body">
@@ -38,7 +38,7 @@
             <div class="card">
                 <div class="card-header">
                     <span class="font-weight-bold">
-                        <a href="{% url 'quizzes:quiz_detail' q.category q.id %}">{{ q.title }}</a>
+                        <a href="{% url 'quizzes:quiz_detail' q.category.slug q.slug %}">{{ q.title }}</a>
                     </span> &middot;
                     <span class="text-muted">
                         &emsp; category: {{ q.category }} &emsp; | &emsp; difficulty: {{ q.difficulty }} &emsp; | &emsp; duration {{ q.duration }}

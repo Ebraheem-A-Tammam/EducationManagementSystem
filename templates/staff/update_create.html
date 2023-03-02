@@ -12,7 +12,7 @@
         <h2>{{message}}</h2>
     {% endif %}
     {% if quiz %}
-    <form method="POST" action="{% url 'quizzes:edit_quiz' quiz.id %}">
+    <form method="POST" action="{% url 'quizzes:edit_quiz' quiz.slug %}">
     {% else %}
     <form method="POST" action="{% url 'quizzes:create_quiz' %}">
     {% endif %}

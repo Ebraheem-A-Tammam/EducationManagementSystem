@@ -9,7 +9,7 @@
             Started at: {{ start }} &emsp; | &emsp; Ends at: {{ end }}
         </span>
         <br><br>
-        <form method="POST" action="{% url 'quizzes:quiz_detail' quiz.category.category quiz.id %}" name="quiz">
+        <form method="POST" action="{% url 'quizzes:quiz_detail' quiz.category.slug quiz.slug %}" name="quiz">
         {% csrf_token %}    
         {% for q in quiz.questions.all %}
             <ol>

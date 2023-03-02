@@ -24,7 +24,7 @@ class Quiz(models.Model):
         return self.title 
 
     def get_absolute_url(self):
-        return reverse('quizzes:quiz_detail',kwargs={'quiz_id':self.id})
+        return reverse('quizzes:quiz_detail',kwargs={'slug':self.slug})
 
     def score_to_pass(self):
         return ceil((len(self.questions.all()) * 70.0) / 100.0)

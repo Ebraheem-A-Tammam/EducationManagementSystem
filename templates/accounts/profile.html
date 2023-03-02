@@ -32,7 +32,7 @@
                     <tr>
                         <td>
                             <span class="font-weight-bold">
-                                <a href="{% url 'quizzes:quiz_detail' s.quiz.category.category s.quiz.id %}">{{s.quiz.title}}</a>
+                                <a href="{% url 'quizzes:quiz_detail' s.quiz.category.slug s.quiz.slug %}">{{s.quiz.title}}</a>
                             </span>
                         </td>
                         <td>
@@ -64,7 +64,7 @@
                         </td>
                         <td>
                             <span>
-                                &emsp; | &emsp; <a href="{% url 'quizzes:quiz_result' s.quiz.category.category s.quiz.id s.id %}">{{s.id}}</a>
+                                &emsp; | &emsp; <a href="{% url 'quizzes:quiz_result' s.quiz.category.slug s.quiz.slug s.id %}">{{s.id}}</a>
                             </span>
                         </td>
                     </tr>
