@@ -1,37 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="card">
+<div class="card">
+    <div class="card-header">
+        <span class="font-weight-bold">
+            {{ article.title }}
+        </span> &middot;
+        <span class="text-muted">
+            &emsp; created at: {{ article.time_created }}
+        </span>
+        <span class="font-weight-bold">
+            &emsp; | &emsp; by: {{ article.author.get_full_name }} {%if request.user == article.author%}<small><a
+                    href='edit/'>edit</a></small>
+            {%endif%}
+        </span>
+    </div>
+    <div class="card-body">
+        <span class="font-weight-bold">{{ article.content }} &middot;</span>
+    </div>
+    <div class="card-footer">
+        <form method="POST">
+            {%csrf_token%}
+            {{form.as_p}}
+            <button type='submit'>Add Comment</button>
+        </form>
+        {% for c in article.comments.all %}
         <div class="card-header">
             <span class="font-weight-bold">
-                {{ article.title }}
-            </span> &middot;
-            <span class="text-muted">
-                &emsp; created at: {{ article.time_created }} 
+                {{ c.author.get_full_name }}
             </span>
-            <span class="font-weight-bold">
-                &emsp; | &emsp; by: {{ article.author.get_full_name }}
+            <span class="text-muted">
+                &emsp; at: {{ c.time_created }}
             </span>
         </div>
         <div class="card-body">
-            <span class="font-weight-bold">{{ article.content }} &middot;</span>
+            <span class="font-weight-bold">
+                {{ c.content }}
+            </span>
         </div>
-        <div class="card-footer">
-            {% for c in article.comments.all %}
-                <div class="card-header">
-                    <span class="font-weight-bold">
-                        {{ c.author.get_full_name }}
-                    </span>
-                    <span class="text-muted">
-                        &emsp; at: {{ c.time_created }} 
-                    </span>
-                </div>
-                <div class="card-body">
-                    <span class="font-weight-bold">
-                        {{ c.content }}
-                    </span>
-                </div>
-            {% endfor %}
-        </div>
+        {% endfor %}
     </div>
-    <br>
+</div>
+<br>
 {% endblock content %}
