@@ -48,7 +48,11 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('pages:staff')
+            if request.GET.get('next'):
+                return redirect(request.GET.get('next'))
+            if user.is_staff:
+                return redirect('pages:staff')
+            return redirect('pages:home')
         context['error'] = 'No user with this credintials'
     context['form'] = AuthenticationForm(request)
     return render(request, 'accounts/login.html', context)
